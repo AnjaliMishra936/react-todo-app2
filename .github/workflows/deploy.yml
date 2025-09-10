@@ -14,31 +14,32 @@ jobs:
       contents: read    
 
     steps:
-      # Step 1 - Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2 - Setup Node.js
+    
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # Step 3 - Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4 - Build React app
       - name: Build React App
         run: npm run build
 
-      # Step 5 - Configure AWS credentials (OIDC)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::027814278268:role/GitHubActions-OIDC-Deploy
           aws-region: ap-south-1  
 
-      # Step 6 - Deploy to S3
       - name: Sync files to S3
         run: aws s3 sync build/ s3://i-react-app --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id EJHOOK8N6KJDD \
+            --paths "/*"
