@@ -43,3 +43,6 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id EJHOOK8N6KJDD \
             --paths "/*"
+            
+      - name: Cleanup old files from S3
+        run: aws s3 sync build/ s3://<YOUR_BUCKET_NAME> --delete
