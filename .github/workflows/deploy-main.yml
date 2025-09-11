@@ -23,6 +23,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      CF_DIST_ID: ${{ secrets.CF_DIST_ID }}   # assign secret to environment variable
 
     steps:
       - name: Checkout code
@@ -49,8 +51,8 @@ jobs:
         run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} --delete
 
       - name: Invalidate CloudFront cache
-        if: ${{ secrets.CF_DIST_ID != '' }}
+        if: env.CF_DIST_ID != ''           # use environment variable instead of secrets
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CF_DIST_ID }} \
+            --distribution-id ${{ env.CF_DIST_ID }} \
             --paths "/*"
