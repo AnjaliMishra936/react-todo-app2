@@ -7,7 +7,7 @@ jobs:
   deploy:
     uses: ./.github/workflows/deploy-main.yml
     with:
-      environment: prod
+      environment: dev
     secrets:
       AWS_ROLE: ${{ secrets.AWS_ROLE }}
       S3_BUCKET: ${{ secrets.S3_BUCKET }}
