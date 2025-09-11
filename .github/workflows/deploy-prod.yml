@@ -11,7 +11,7 @@ on:
 
 jobs:
   deploy:
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/deploy-main.yml
     with:
       environment: prod
     secrets:
