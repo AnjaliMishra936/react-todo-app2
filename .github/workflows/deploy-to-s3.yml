@@ -17,7 +17,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::027814278268:role/GitHubActions-OIDC-Deploy
+          role-to-assume: arn:aws:iam::027814278268:role/DevGitHubRole
           aws-region: ap-south-1   
 
       - name: Sync files to S3
