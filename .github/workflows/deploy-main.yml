@@ -1,0 +1,54 @@
+name: Reusable S3 + CloudFront Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      aws-role-arn:
+        required: true
+        type: string
+      s3-bucket:
+        required: true
+        type: string
+      distribution-id:
+        required: false
+        type: string
+      aws-region:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}   
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: npm install
+      - run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.aws-role-arn }}
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Upload to S3
+        run: aws s3 sync build/ s3://${{ inputs.s3-bucket }} --delete
+
+      - name: Invalidate CloudFront Cache
+        if: ${{ inputs.distribution-id != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ inputs.distribution-id }} \
+            --paths "/*"
