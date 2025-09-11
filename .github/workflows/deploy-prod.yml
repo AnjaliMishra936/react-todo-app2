@@ -1,0 +1,14 @@
+name: Deploy to Prod
+
+on:
+  workflow_dispatch:  
+
+jobs:
+  deploy-prod:
+    uses: ./.github/workflows/deploy-main.yml
+    with:
+      environment: prod   
+      aws-role-arn: ${{ secrets.AWS_ROLE }}
+      s3-bucket: ${{ secrets.S3_BUCKET }}
+      distribution-id: ${{ secrets.CF_DIST_ID }}
+      aws-region: ${{ secrets.AWS_REGION }}
