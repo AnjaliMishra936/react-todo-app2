@@ -2,7 +2,7 @@ name: Deploy to S3
 
 on:
   push:
-    branches: [ dev ]   
+    branches: [ master ]   
 
 permissions:
   id-token: write  
@@ -21,4 +21,4 @@ jobs:
           aws-region: ap-south-1   
 
       - name: Sync files to S3
-        run: aws s3 sync ./ s3://i-react-app --delete --exclude ".git/*" --exclude ".github/*"
+        run: aws s3 sync ./ s3://react-app-dev-env --delete --exclude ".git/*" --exclude ".github/*"
