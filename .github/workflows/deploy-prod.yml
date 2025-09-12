@@ -1,4 +1,4 @@
-name: Deploy to Prod (Manual)
+name: Deploy to Prod 
 
 on:
   workflow_dispatch:  
@@ -26,7 +26,7 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Configure AWS credentials (OIDC)
+      - name: Configure AWS credentials 
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
