@@ -1,16 +1,16 @@
-name: Deploy to Prod
+name: Deploy to Prod (Manual)
 
 on:
-  workflow_dispatch:   
+  workflow_dispatch:  
+
+permissions:
+  id-token: write     
+  contents: read     
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: prod
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -26,18 +26,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Sync files to Prod S3
+      - name: Sync files to S3
         run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} --delete
-
-      - name: Invalidate CloudFront cache
-        if: secrets.CF_DIST_ID != ''
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CF_DIST_ID }} \
-            --paths "/*"
