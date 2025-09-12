@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: ${{ secrets.AWS_REGION }}
   SOURCE_DIR: ./build
 
 jobs:
