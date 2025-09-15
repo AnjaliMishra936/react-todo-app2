@@ -8,6 +8,9 @@ on:
          required: true
          type: choice
          default: 'dev'
+         options:
+          - 'dev'
+          - 'prod'
 
 permissions:
   id-token: write     
