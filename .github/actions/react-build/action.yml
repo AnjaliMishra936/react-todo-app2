@@ -14,7 +14,7 @@ runs:
         node-version: 20
 
     - name: Install dependencies
-      run: npm ci
+      run: npm install
       shell: bash
 
     - name: Build React app
