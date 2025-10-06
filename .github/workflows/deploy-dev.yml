@@ -1,20 +1,23 @@
 name: Manual Deployment
 
-on:
-  workflow_dispatch:  
-    inputs:
-       environment:
-         description: 'Choose the environment to deploy to'
-         required: true
-         type: choice
-         default: 'dev'
-         options:
-          - 'dev'
-          - 'prod'
+on: [] # disabled — set to [] to temporarily disable all triggers
+
+# To re-enable manual dispatch, replace the above with the block below:
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Choose the environment to deploy to'
+#         required: true
+#         type: choice
+#         default: 'dev'
+#         options:
+#           - 'dev'
+#           - 'prod'
 
 permissions:
-  id-token: write     
-  contents: read     
+  id-token: write
+  contents: read
 
 jobs:
   deploy:
