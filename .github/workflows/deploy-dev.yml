@@ -1,51 +1,13 @@
-name: Manual Deployment
+# .github/workflows/deploy-dev.yml
+name: Deploy Dev
 
-on: [] # disabled — set to [] to temporarily disable all triggers
-
-# To re-enable manual dispatch, replace the above with the block below:
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         description: 'Choose the environment to deploy to'
-#         required: true
-#         type: choice
-#         default: 'dev'
-#         options:
-#           - 'dev'
-#           - 'prod'
-
-permissions:
-  id-token: write
-  contents: read
+on:
+  push:
+    branches: [ "dev" ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    permissions:
-      id-token: write
-      contents: read
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build React app
-        run: npm run build
-
-      - name: Configure AWS credentials 
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Sync files to S3
-        run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} --delete
+      - name: Run my composite build action
+        uses: ./.github/actions/react-build
