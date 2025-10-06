@@ -1,0 +1,29 @@
+name: "React App Build"
+description: "Builds the React app and prepares files for deployment"
+inputs:
+  build_dir:
+    description: "Build output directory"
+    required: false
+    default: "build"
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build React app
+      run: npm run build
+
+    - name: Upload build as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: react-build
+        path: ${{ inputs.build_dir }}
